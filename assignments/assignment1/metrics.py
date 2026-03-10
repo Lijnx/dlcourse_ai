@@ -1,3 +1,5 @@
+import numpy as np
+
 def binary_classification_metrics(prediction, ground_truth):
     '''
     Computes metrics for binary classification
@@ -14,7 +16,17 @@ def binary_classification_metrics(prediction, ground_truth):
     accuracy = 0
     f1 = 0
 
-    # TODO: implement metrics!
+    tp = np.sum((prediction == True) & (ground_truth == True))
+    tn = np.sum((prediction == False) & (ground_truth == False))
+    fp = np.sum((prediction == True) & (ground_truth == False))
+    fn = np.sum((prediction == False) & (ground_truth == True))
+
+    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+    accuracy = (tp + tn) / (tp + tn + fp + fn) if (tp + tn + fp + fn) > 0 else 0.0
+    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+
+
     # Some helpful links:
     # https://en.wikipedia.org/wiki/Precision_and_recall
     # https://en.wikipedia.org/wiki/F1_score
@@ -33,5 +45,5 @@ def multiclass_accuracy(prediction, ground_truth):
     Returns:
     accuracy - ratio of accurate predictions to total samples
     '''
-    # TODO: Implement computing accuracy
-    return 0
+
+    return np.sum(prediction == ground_truth) / prediction.shape[0]
