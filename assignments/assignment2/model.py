@@ -17,7 +17,6 @@ class TwoLayerNet:
         reg, float - L2 regularization strength
         """
         self.reg = reg
-        # TODO Create necessary layers
         self.hidden = FullyConnectedLayer(n_input, hidden_layer_size)
         self.relu = ReLULayer()
         self.output = FullyConnectedLayer(hidden_layer_size, n_output)
@@ -34,17 +33,12 @@ class TwoLayerNet:
         """
         # Before running forward and backward pass through the model,
         # clear parameter gradients aggregated from the previous pass
-        # TODO Set parameter gradient to zeros
-        # Hint: using self.params() might be useful!
 
         params = self.params()
 
         for param in params.values():
             param.grad = np.zeros_like(param.grad)
 
-        
-        # TODO Compute loss and fill param gradients
-        # by running forward and backward passes through the model
         logits = self.output.forward( self.relu.forward( self.hidden.forward(X) ) )
         loss, grad = softmax_with_cross_entropy(logits, y)
 
@@ -55,13 +49,12 @@ class TwoLayerNet:
 
         # After that, implement l2 regularization on all params
         # Hint: self.params() is useful again!
-        reg_loss, reg_grad = l2_regularization(params['output_W'].value, self.reg)
-        loss += reg_loss
-        params['output_W'].grad += reg_grad
+        for name, param in params.items():
+            if name.endswith('_W'):
+                reg_loss, reg_grad = l2_regularization(param.value, self.reg)
+                loss += reg_loss
+                param.grad += reg_grad
 
-        reg_loss, reg_grad = l2_regularization(params['hidden_W'].value, self.reg)
-        loss += reg_loss
-        params['hidden_W'].grad += reg_grad
 
         return loss
 
@@ -75,18 +68,16 @@ class TwoLayerNet:
         Returns:
           y_pred, np.array of int (test_samples)
         """
-        # TODO: Implement predict
-        # Hint: some of the code of the compute_loss_and_gradients
-        # can be reused
-        pred = np.zeros(X.shape[0], np.int)
+        pred = np.zeros(X.shape[0], np.int64)
 
-        raise Exception("Not implemented!")
+        logits = self.output.forward( self.relu.forward( self.hidden.forward(X) ) )
+        pred = np.argmax(logits, axis=1)
+
         return pred
 
     def params(self):
         result = {}
 
-        # TODO Implement aggregating all of the params
         result = {'hidden_W': self.hidden.W, 'hidden_B': self.hidden.B, 
                   'output_W': self.output.W, 'output_B': self.output.B}
 
