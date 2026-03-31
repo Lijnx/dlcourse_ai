@@ -3,13 +3,24 @@ name = "dlcourse-ai"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dependencies = [
     "ipykernel>=7.2.0",
     "matplotlib>=3.10.8",
-    "numpy>=2.4.3",
     "scikit-learn>=1.8.0",
-    "scipy>=1.17.1",
-    "torch>=2.10.0",
-    "torchvision>=0.25.0",
+    "torch>=2.11.0",
+    "torchvision>=0.26.0",
 ]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu126", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+torchvision = [
+  { index = "pytorch-cu126", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
